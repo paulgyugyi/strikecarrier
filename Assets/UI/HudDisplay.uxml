@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/HudUi.uss?fileID=7433441132597879392&amp;guid=4697ffbb6c4a8ec49abb5f1798d5b42d&amp;type=3#HudUi" />
+    <ui:Label text="Wins" display-tooltip-when-elided="true" name="EnergyLabel" class="header" style="color: rgb(255, 255, 0); width: 100px; -unity-text-align: middle-left; font-size: 18px; align-items: stretch; align-self: flex-start;" />
+    <ui:ProgressBar value="0" title="0" name="EnergyBar" style="width: 100px; color: rgb(0, 0, 0); flex-direction: column; -unity-text-align: middle-left; font-size: 18px; align-self: flex-start;" />
+    <ui:Label text="Resources" display-tooltip-when-elided="true" name="ResourceLabel" style="width: 100px; color: rgb(255, 127, 0); font-size: 18px; align-self: flex-start;" />
+    <ui:ProgressBar value="0" title="0" name="ResourceBar" style="width: 100px; color: rgb(0, 0, 0); font-size: 18px; align-self: flex-start;" />
+    <ui:VisualElement name="Container" />
+</ui:UXML>
