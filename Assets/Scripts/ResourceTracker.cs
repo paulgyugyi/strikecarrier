@@ -97,7 +97,7 @@ public class ResourceTracker : MonoBehaviour
     public void ResetResources()
     {
         resources = startingResources;
-        Debug.Log("Resetting to " + resources + " resources.");
+        //Debug.Log("Resetting to " + resources + " resources.");
     }
 
     public void AddResources(float newResources)
@@ -108,7 +108,7 @@ public class ResourceTracker : MonoBehaviour
             resources = maxResources;
         }
         UpdateHud();
-        Debug.Log(name + " acquired " + newResources + " resources, now have " + resources + " resources.");
+        //Debug.Log(name + " acquired " + newResources + " resources, now have " + resources + " resources.");
     }
 
     public bool HasResources(float cost)
@@ -131,13 +131,13 @@ public class ResourceTracker : MonoBehaviour
 
     public void AddEnergy(float newEnergy)
     {
-        Debug.Log(name + " acquired " + newEnergy + "energy");
+        //Debug.Log(name + " acquired " + newEnergy + "energy");
         SetEnergy(energy + newEnergy);
     }
 
     public void ResetEnergy()
     {
-        Debug.Log("Resetting energy.");
+        //Debug.Log("Resetting energy.");
         SetEnergy(startingEnergy);
     }
 
@@ -152,7 +152,7 @@ public class ResourceTracker : MonoBehaviour
         {
             energy = 0;
         }
-        Debug.Log(name + " energy is now " + energy);
+        //Debug.Log(name + " energy is now " + energy);
         UpdateHud();
         UpdateWarpPoint();
     }

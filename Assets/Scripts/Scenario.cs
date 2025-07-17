@@ -7,6 +7,9 @@ public class Scenario : MonoBehaviour
     public GameObject Carrier1 = null;
     public GameObject Carrier2 = null;
 
+    public int numTrials = 1;
+    public int numShips = 5;
+
     private CarrierLaunch carrier1Launch = null;
     private CarrierMove carrier1Move = null;
 
@@ -28,13 +31,13 @@ public class Scenario : MonoBehaviour
         Vector3 carrier1StartPosition = Carrier1.transform.position;
         Vector3 carrier2StartPosition = Carrier2.transform.position;
         yield return new WaitForSeconds(3);
-        for (int trial = 0; trial < 30; trial++)
+        for (int trial = 0; trial < numTrials; trial++)
         {
             Carrier1.transform.position = carrier1StartPosition;
             Carrier2.transform.position = carrier2StartPosition;
             Carrier1.GetComponent<ResourceTracker>().AddResources(1500f);
             Carrier2.GetComponent<ResourceTracker>().AddResources(1500f);
-            for (int i = 0; i < 15; i++)
+            for (int i = 0; i < numShips; i++)
             {
                 carrier1Launch.LaunchShip(carrier1Launch.fighterPrefab);
                 carrier2Launch.LaunchShip(carrier2Launch.fighterPrefab);

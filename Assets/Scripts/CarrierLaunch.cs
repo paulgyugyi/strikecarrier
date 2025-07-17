@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 // This class contains code for launching fighters, bombers and landers.
 public class CarrierLaunch : MonoBehaviour
 {
+    public string carrierName = "Carrier";
+
     // Prefabs for each ship type
     public GameObject fighterPrefab = null;
     public GameObject bomberPrefab = null;
@@ -29,13 +31,28 @@ public class CarrierLaunch : MonoBehaviour
     public AudioClip launchClip;
     public float volume = 0.5f;
 
-
+    // Squadrons
+    private List<Squadron> squadrons = new List<Squadron>();
+    private int squadronSize = 5;
+    
     void Start()
     {
         resourceTracker = GetComponent<ResourceTracker>();
         fighterLaunchLocation = transform.Find("LaunchBow").gameObject;
         bomberLaunchLocation = transform.Find("LaunchPort").gameObject;
         landerLaunchLocation = transform.Find("LaunchStarboard").gameObject;
+
+        for (int i = 0; i < maxShips; i++)
+        {
+            if (i % squadronSize == 0)
+            {
+                Squadron newSquadron = new Squadron();
+                newSquadron.squadronName = carrierName + "_Squadron_" + (i / squadronSize);
+                newSquadron.shipINT = fighterPrefab.GetComponent<Interceptor>().shipINT;
+                newSquadron.Init();
+                squadrons.Add(newSquadron);
+            }
+        }
 
         // Clean up any launched ships from the previous level.
         RecallShips();
@@ -78,6 +95,10 @@ public class CarrierLaunch : MonoBehaviour
                 transform.rotation);
                 ship.GetComponent<Interceptor>().Carrier = gameObject;
                 ship.GetComponent<Interceptor>().patrolLocation = GetPatrolLocation(shipPrefab);
+                Squadron assignedSquadron = squadrons[ships.Count / squadronSize];
+                int squadronPosition = assignedSquadron.AddMember(ship);
+                ship.GetComponent<Interceptor>().squadron = assignedSquadron;
+                ship.GetComponent<Interceptor>().squadronPosition = squadronPosition;
                 if (shipPrefab == fighterPrefab)
                 {
                     ship.GetComponent<Interceptor>().shouldOrbit = true;

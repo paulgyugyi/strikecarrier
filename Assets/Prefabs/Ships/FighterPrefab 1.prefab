@@ -288,6 +288,13 @@ MonoBehaviour:
   ScanLayer: Fighters,Bombers,Landers
   patrolLocation: {fileID: 0}
   shouldOrbit: 0
+  huntingTimeout: 8
+  propulsion: {fileID: 0}
+  squadronPosition: 0
+  shipSTR: 0
+  shipINT: 2
+  shipDEX: 0
+  shipName: 
 --- !u!114 &2576019229177705706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -303,7 +310,7 @@ MonoBehaviour:
   state: 0
   regionLockCenter: {fileID: 0}
   regionLockRadius: 0
-  level: 2
+  level: 5
   heading: 0
 --- !u!1 &5522466117612910809
 GameObject:

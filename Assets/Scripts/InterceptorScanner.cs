@@ -58,6 +58,15 @@ public class InterceptorScanner : MonoBehaviour
                 List<int> validIndexes = FilterEnemies(enemies);
                 if (validIndexes.Count > 0)
                 {
+                    foreach(int vidx in validIndexes)
+                    {
+                        // pick first on in firing arc
+                        float targetBearing = Vector3.Angle(transform.up, enemies[vidx].gameObject.transform.position - transform.position);
+                        if (targetBearing < GetComponent<InterceptorWeapon>().firingArc)
+                        {
+                            return enemies[vidx].gameObject;
+                        }
+                    }
                     // Randomly select amongst the available targets, to prevent
                     // ships from all ganging up on one.
                     int selectedEnemy = validIndexes[Random.Range(0, validIndexes.Count - 1)];

@@ -4,7 +4,7 @@ public class InterceptorPropulsion : MonoBehaviour
 {
     // Eco: Cruising speed, and slow down when approaching waypoint
     // Sport: Maintain max speed
-    public enum PropulsionState { Eco, Sport };
+    public enum PropulsionState { Eco, Sport, Follow };
     public PropulsionState state = PropulsionState.Eco;
 
     public GameObject regionLockCenter = null;
@@ -18,6 +18,7 @@ public class InterceptorPropulsion : MonoBehaviour
     private float rotationSpeed = 1f;
 
     private Transform target = null;
+    private Vector3 targetOffset = Vector3.zero;
 
     private Vector3 waypoint = Vector3.zero;
     private float distanceToWaypoint = 0.0f;
@@ -87,12 +88,13 @@ public class InterceptorPropulsion : MonoBehaviour
         distanceToWaypoint = Vector3.Magnitude(waypoint - transform.position);
     }
 
-   public void TrackTarget(Transform newTarget)
+   public void TrackTarget(Transform newTarget, Vector3 offset)
     {
         target = newTarget;
+        targetOffset = offset;
         if (target != null)
         {
-            waypoint = target.position;
+            waypoint = target.position + offset.x * target.right + offset.y * target.forward;
         }
         shouldOrbit = false;
         distanceToWaypoint = Vector3.Magnitude(waypoint - transform.position);
@@ -139,7 +141,7 @@ public class InterceptorPropulsion : MonoBehaviour
             }
             else
             {
-                waypoint = target.position;
+                waypoint = target.position + targetOffset.x * target.right + targetOffset.y * target.up;
             }
         }
         return waypoint;
@@ -174,7 +176,7 @@ public class InterceptorPropulsion : MonoBehaviour
         Vector3 desiredAngles = desiredRotation.eulerAngles;
 
         float newHeading = heading;
-        if (state == PropulsionState.Eco)
+        if (state == PropulsionState.Eco || state == PropulsionState.Follow)
         {
             newHeading = desiredAngles.z;
         }
@@ -231,7 +233,7 @@ public class InterceptorPropulsion : MonoBehaviour
         }
 
         // Set heading
-        if (state == PropulsionState.Eco)
+        if (state == PropulsionState.Eco || state == PropulsionState.Follow)
         {
             // If in Eco mode, heading does not reflect physics (ship is using vector thrusters, not just main)
             if (shouldOrbit == false && distanceToWaypoint < deadzone)

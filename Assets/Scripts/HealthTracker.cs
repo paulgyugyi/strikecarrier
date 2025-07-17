@@ -60,7 +60,7 @@ public class HealthTracker : MonoBehaviour
             // Ignore damage to defeated objects.
             return false;
         }
-        Debug.Log(name + " hit for " + damage + " damage");
+        Debug.Log(GetComponent<Interceptor>().shipName + " hit for " + damage + " damage");
         if (shieldStrength > 0)
         {
             float effectiveShieldStrength = shieldStrength;
@@ -83,13 +83,13 @@ public class HealthTracker : MonoBehaviour
             {
                 if (effectiveShieldStrength > 0)
                 {
-                    Debug.Log("Shields blocked " + effectiveShieldStrength + " damage");
+                    Debug.Log(GetComponent<Interceptor>().shipName + "Shields blocked " + effectiveShieldStrength + " damage");
                     damage -= effectiveShieldStrength;
                 }
             }
             else
             {
-                Debug.Log("Shields blocked all damage");
+                Debug.Log(GetComponent<Interceptor>().shipName + "Shields blocked all damage");
                 damage = 0f;
             }
         }
@@ -101,7 +101,7 @@ public class HealthTracker : MonoBehaviour
         health = 0f;
         if (actionOnDefeat == ActionOnDefeat.Capture)
         {
-            Debug.Log(name + " has been captured.");
+            Debug.Log(GetComponent<Interceptor>().shipName + " has been captured.");
             gameObject.transform.Find("sprite").gameObject.GetComponent<SpriteRenderer>().color = Color.blue;
             // Switch layer so friendly ships will no longer target captured objects.
             gameObject.layer = LayerMask.NameToLayer("Captured");
@@ -113,7 +113,7 @@ public class HealthTracker : MonoBehaviour
         }
         else
         {
-            Debug.Log(name + " has been destroyed.");
+            Debug.Log(GetComponent<Interceptor>().shipName + " has been destroyed.");
             if (explosionPrefab != null)
             {
                 // Display a could of smoke/debris for 1 second after destruction.
@@ -126,7 +126,7 @@ public class HealthTracker : MonoBehaviour
             {
                 AudioSource.PlayClipAtPoint(clip, transform.position);
             }
-            Destroy(gameObject);
+            GetComponent<Interceptor>().Die();
         }
         return true;
 
