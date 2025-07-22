@@ -5,9 +5,9 @@ public class Squadron
 {
     public string squadronName = "";
     public int numMechs = 1;
-    public int shipSTR = 5;
-    public int shipINT = 5;
-    public int shipDEX = 5;
+    public int shipSTR = 0;
+    public int shipINT = 0;
+    public int shipDEX = 0;
 
     public Vector3 leaderDestination = Vector3.zero;
 
@@ -22,13 +22,17 @@ public class Squadron
     public void Init()
     {
         leaderDestination = Vector3.zero;
-        if (shipINT >= 3)
+        if (shipINT >= 4)
         {
-            Debug.Log(squadronName + " activating formation flying");
+            //Debug.Log(squadronName + " activating formation flying");
             gangUp = true;
             formation = 1;
         }
-        //SpawnSquadron();
+        else
+        {
+            gangUp = false;
+            formation = 0;
+        }
     }
 
     public int Formation()

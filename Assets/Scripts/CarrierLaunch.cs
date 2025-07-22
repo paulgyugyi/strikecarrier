@@ -34,7 +34,8 @@ public class CarrierLaunch : MonoBehaviour
     // Squadrons
     private List<Squadron> squadrons = new List<Squadron>();
     private int squadronSize = 5;
-    
+
+    LaunchBay launchBay = null;
     void Start()
     {
         resourceTracker = GetComponent<ResourceTracker>();
@@ -42,20 +43,32 @@ public class CarrierLaunch : MonoBehaviour
         bomberLaunchLocation = transform.Find("LaunchPort").gameObject;
         landerLaunchLocation = transform.Find("LaunchStarboard").gameObject;
 
+        launchBay = GetComponent<LaunchBay>();
+
         for (int i = 0; i < maxShips; i++)
         {
             if (i % squadronSize == 0)
             {
                 Squadron newSquadron = new Squadron();
                 newSquadron.squadronName = carrierName + "_Squadron_" + (i / squadronSize);
-                newSquadron.shipINT = fighterPrefab.GetComponent<Interceptor>().shipINT;
-                newSquadron.Init();
                 squadrons.Add(newSquadron);
             }
+            UpdateSquadrons();
         }
 
         // Clean up any launched ships from the previous level.
         RecallShips();
+    }
+
+    private void UpdateSquadrons()
+    {
+        foreach (Squadron squadron in squadrons)
+        {
+                squadron.shipSTR = launchBay.shipSTR;
+                squadron.shipINT = launchBay.shipINT;
+                squadron.shipDEX = launchBay.shipDEX;
+                squadron.Init();          
+        }
     }
 
     private GameObject GetPatrolLocation(GameObject shipPrefab)
@@ -85,6 +98,8 @@ public class CarrierLaunch : MonoBehaviour
         // Make room for new ships in case anything was recently destroyed.
         PruneDeadShips();
 
+        UpdateSquadrons();
+
         if (ships.Count < maxShips)
         {
             float cost = shipPrefab.gameObject.GetComponent<Interceptor>().BuildCost;
@@ -93,16 +108,20 @@ public class CarrierLaunch : MonoBehaviour
                 Debug.Log("Launching a " + shipPrefab.name);
                 GameObject ship = Instantiate(shipPrefab, transform.position,
                 transform.rotation);
-                ship.GetComponent<Interceptor>().Carrier = gameObject;
-                ship.GetComponent<Interceptor>().patrolLocation = GetPatrolLocation(shipPrefab);
+                Interceptor interceptor = ship.GetComponent<Interceptor>();
+                interceptor.Carrier = gameObject;
+                interceptor.patrolLocation = GetPatrolLocation(shipPrefab);
                 Squadron assignedSquadron = squadrons[ships.Count / squadronSize];
                 int squadronPosition = assignedSquadron.AddMember(ship);
-                ship.GetComponent<Interceptor>().squadron = assignedSquadron;
-                ship.GetComponent<Interceptor>().squadronPosition = squadronPosition;
+                interceptor.squadron = assignedSquadron;
+                interceptor.squadronPosition = squadronPosition;
                 if (shipPrefab == fighterPrefab)
                 {
-                    ship.GetComponent<Interceptor>().shouldOrbit = true;
+                    interceptor.shouldOrbit = true;
                 }
+                interceptor.shipSTR = assignedSquadron.shipSTR;
+                interceptor.shipINT = assignedSquadron.shipINT;
+                interceptor.shipDEX = assignedSquadron.shipDEX;
                 ships.Add(ship);
                 resourceTracker.UseResources(cost);
                 if ((audioSource != null) && (launchClip != null))

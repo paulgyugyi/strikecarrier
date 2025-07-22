@@ -33,6 +33,50 @@ public class Scenario : MonoBehaviour
         yield return new WaitForSeconds(3);
         for (int trial = 0; trial < numTrials; trial++)
         {
+            LaunchBay launchBay = null;
+            switch (trial % 4)
+            {
+                case 0:
+                    launchBay = Carrier1.GetComponent<LaunchBay>();
+                    launchBay.shipSTR = 5;
+                    launchBay.shipINT = 3;
+                    launchBay.shipDEX = 5;
+                    launchBay = Carrier2.GetComponent<LaunchBay>();
+                    launchBay.shipSTR = 5;
+                    launchBay.shipINT = 5;
+                    launchBay.shipDEX = 5;
+                    break;
+                case 1:
+                    launchBay = Carrier1.GetComponent<LaunchBay>();
+                    launchBay.shipSTR = 5;
+                    launchBay.shipINT = 5;
+                    launchBay.shipDEX = 5;
+                    launchBay = Carrier2.GetComponent<LaunchBay>();
+                    launchBay.shipSTR = 5;
+                    launchBay.shipINT = 5;
+                    launchBay.shipDEX = 5;
+                    break;
+                case 2:
+                    launchBay = Carrier1.GetComponent<LaunchBay>();
+                    launchBay.shipSTR = 5;
+                    launchBay.shipINT = 3;
+                    launchBay.shipDEX = 5;
+                    launchBay = Carrier2.GetComponent<LaunchBay>();
+                    launchBay.shipSTR = 5;
+                    launchBay.shipINT = 5;
+                    launchBay.shipDEX = 3;
+                    break;
+                default:
+                    launchBay = Carrier1.GetComponent<LaunchBay>();
+                    launchBay.shipSTR = 5;
+                    launchBay.shipINT = 3;
+                    launchBay.shipDEX = 5;
+                    launchBay = Carrier2.GetComponent<LaunchBay>();
+                    launchBay.shipSTR = 5;
+                    launchBay.shipINT = 3;
+                    launchBay.shipDEX = 5;
+                    break;
+            }
             Carrier1.transform.position = carrier1StartPosition;
             Carrier2.transform.position = carrier2StartPosition;
             Carrier1.GetComponent<ResourceTracker>().AddResources(1500f);
@@ -43,7 +87,7 @@ public class Scenario : MonoBehaviour
                 carrier2Launch.LaunchShip(carrier2Launch.fighterPrefab);
                 yield return new WaitForSeconds(0.5f);
             }
-            yield return new WaitForSeconds(Random.Range(0, 6));
+            yield return new WaitForSeconds(4 + Random.Range(0, 6));
             carrier1Move.inputThrust = true;
             carrier2Move.inputThrust = true;
             yield return new WaitForSeconds(2f);

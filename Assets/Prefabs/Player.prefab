@@ -23,13 +23,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1340643284280651831}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7782966777005456775}
-  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2062457451513403216
 GameObject:
@@ -57,13 +57,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2062457451513403216}
+  serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.5199995, z: 0}
   m_LocalScale: {x: 16, y: 16, z: 16}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7782966777005456775}
-  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1298751683343394817
 MeshFilter:
@@ -159,13 +159,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3567517352678066467}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7782966777005456775}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8573550683760078845
 GameObject:
@@ -198,6 +198,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8573550683760078845}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.32, y: -13.13, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -209,7 +210,6 @@ Transform:
   - {fileID: 5090118250026310800}
   - {fileID: 4061006756320357614}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &6935470645044417795
 SpriteRenderer:
@@ -349,6 +349,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationSpeed: 1
   audioSource: {fileID: 178169268565834154}
+  inputThrust: 0
 --- !u!114 &2374015186257982376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -366,7 +367,9 @@ MonoBehaviour:
   maxEnergy: 5
   startingEnergy: 0
   energy: 0
+  regenAmount: 100
   sceneYouLose: 4
+  hudDisplay: {fileID: 0}
 --- !u!114 &7799620066135267350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,6 +382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad336ea85fc7f754fb118ab05c7cf60d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  carrierName: Carrier
   fighterPrefab: {fileID: 4402224760742689054, guid: 6301952f8722d2a47ba5932d02cb01b6, type: 3}
   bomberPrefab: {fileID: 6460946573737644743, guid: 94d938b857d7afd4d9ef037a15a2b8b4, type: 3}
   landerPrefab: {fileID: 8854143952633732223, guid: 89e706320f91e004981270e8f537d30f, type: 3}
@@ -682,13 +686,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8739368898195053818}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7782966777005456775}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &6603572152240129859
 PrefabInstance:

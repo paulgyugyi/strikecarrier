@@ -49,6 +49,9 @@ public class Interceptor : MonoBehaviour
         propulsion = GetComponent<InterceptorPropulsion>();
         scanner = GetComponent<InterceptorScanner>();
         weapon = GetComponent<InterceptorWeapon>();
+
+        propulsion.level = shipDEX;
+
         if (Carrier == null)
         {
             basePosition = transform.position;
@@ -79,6 +82,7 @@ public class Interceptor : MonoBehaviour
 
             SetShipName();
         }
+        //Debug.Log(shipName + " launching with stats " + shipSTR + "/" + shipINT + "/" + shipDEX);
     }
 
     void FixedUpdate()
@@ -139,7 +143,7 @@ public class Interceptor : MonoBehaviour
                 weaponTarget = newTarget;
                 if (newTarget == null)
                 {
-                    Debug.Log(shipName + " no target");
+                    //Debug.Log(shipName + " no target");
                     propulsion.state = InterceptorPropulsion.PropulsionState.Eco;
                     if (Carrier == null)
                     {

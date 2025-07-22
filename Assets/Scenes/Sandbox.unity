@@ -332,6 +332,23 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8573550683760078845, guid: 36348297839644ba8bc9c9f9aaa55fce, type: 3}
   m_PrefabInstance: {fileID: 1834902470537148344}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &154527343
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 154527342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3db74aca5a3aa409d8a5cbc5df17e77e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  installed: 1
+  bayNumber: 1
+  shipSTR: 5
+  shipINT: 5
+  shipDEX: 5
 --- !u!4 &158597666 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 964434914929097265, guid: bebbc03a15669b1479f18eb775fb28a6, type: 3}
@@ -882,6 +899,18 @@ PrefabInstance:
       propertyPath: startingResources
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3479549995546004243, guid: 36348297839644ba8bc9c9f9aaa55fce, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3479549995546004243, guid: 36348297839644ba8bc9c9f9aaa55fce, type: 3}
+      propertyPath: m_ActionEvents.Array.data[10].m_ActionId
+      value: e5ab9315-7328-4d99-b98f-028747a9d399
+      objectReference: {fileID: 0}
+    - target: {fileID: 3479549995546004243, guid: 36348297839644ba8bc9c9f9aaa55fce, type: 3}
+      propertyPath: m_ActionEvents.Array.data[10].m_ActionName
+      value: Player/Restart[/Keyboard/r]
+      objectReference: {fileID: 0}
     - target: {fileID: 4061006756320357614, guid: 36348297839644ba8bc9c9f9aaa55fce, type: 3}
       propertyPath: m_LocalScale.x
       value: 6
@@ -957,7 +986,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8573550683760078845, guid: 36348297839644ba8bc9c9f9aaa55fce, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2029295981}
   m_SourcePrefab: {fileID: 100100000, guid: 36348297839644ba8bc9c9f9aaa55fce, type: 3}
 --- !u!1 &1067751338
 GameObject:
@@ -6099,6 +6131,23 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8573550683760078845, guid: 36348297839644ba8bc9c9f9aaa55fce, type: 3}
   m_PrefabInstance: {fileID: 1032781015}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2029295981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2029295980}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3db74aca5a3aa409d8a5cbc5df17e77e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  installed: 1
+  bayNumber: 1
+  shipSTR: 5
+  shipINT: 5
+  shipDEX: 5
 --- !u!1001 &2138179154
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6192,6 +6241,18 @@ PrefabInstance:
       propertyPath: startingResources
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3479549995546004243, guid: 36348297839644ba8bc9c9f9aaa55fce, type: 3}
+      propertyPath: m_ActionEvents.Array.size
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3479549995546004243, guid: 36348297839644ba8bc9c9f9aaa55fce, type: 3}
+      propertyPath: m_ActionEvents.Array.data[10].m_ActionId
+      value: e5ab9315-7328-4d99-b98f-028747a9d399
+      objectReference: {fileID: 0}
+    - target: {fileID: 3479549995546004243, guid: 36348297839644ba8bc9c9f9aaa55fce, type: 3}
+      propertyPath: m_ActionEvents.Array.data[10].m_ActionName
+      value: Player/Restart[/Keyboard/r]
+      objectReference: {fileID: 0}
     - target: {fileID: 4061006756320357614, guid: 36348297839644ba8bc9c9f9aaa55fce, type: 3}
       propertyPath: m_LocalScale.x
       value: 6
@@ -6271,7 +6332,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8573550683760078845, guid: 36348297839644ba8bc9c9f9aaa55fce, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 154527343}
   m_SourcePrefab: {fileID: 100100000, guid: 36348297839644ba8bc9c9f9aaa55fce, type: 3}
 --- !u!1001 &1964623901187899822
 PrefabInstance:
