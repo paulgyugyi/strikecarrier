@@ -70,6 +70,7 @@ public class InterceptorPropulsion : MonoBehaviour
     public void OrbitTarget(Transform newTarget, Vector3 startPosition)
     {
         target = newTarget;
+        targetOffset = Vector3.zero;
         shouldOrbit = true;
         if (target != null)
         {
@@ -221,19 +222,22 @@ public class InterceptorPropulsion : MonoBehaviour
         Vector3 forceDirection = new Vector3(0f, 0f, 0f);
         forceDirection = Quaternion.AngleAxis(heading, Vector3.forward) * Vector3.up;
         rb2D.AddForce(Vector3.Normalize(forceDirection) * desiredThrust, ForceMode2D.Impulse);
-
+        if (desiredThrust < 0.01f)
+        {
+            Debug.Log(" thrust below limit");
+        }
         // Limit velocity
-        if (state == PropulsionState.Eco)
-        {
-            rb2D.velocity = Vector2.ClampMagnitude(rb2D.velocity, cruisingSpeed);
-        }
-        else
-        {
-            rb2D.velocity = Vector2.ClampMagnitude(rb2D.velocity, maxSpeed);
-        }
+            if (state == PropulsionState.Eco)
+            {
+                rb2D.velocity = Vector2.ClampMagnitude(rb2D.velocity, cruisingSpeed);
+            }
+            else
+            {
+                rb2D.velocity = Vector2.ClampMagnitude(rb2D.velocity, maxSpeed);
+            }
 
         // Set heading
-        if (state == PropulsionState.Eco || state == PropulsionState.Follow)
+        if (state == PropulsionState.Eco)
         {
             // If in Eco mode, heading does not reflect physics (ship is using vector thrusters, not just main)
             if (shouldOrbit == false && distanceToWaypoint < deadzone)
@@ -252,6 +256,13 @@ public class InterceptorPropulsion : MonoBehaviour
             {
                 // For normal patrolling, point towards waypoint 
                 transform.rotation = Quaternion.LookRotation(Vector3.forward, deltaPosition);
+            }
+        }
+        else if (state == PropulsionState.Follow)
+        {
+            if (target != null)
+            {
+                transform.rotation = target.transform.rotation;
             }
         }
         heading = transform.rotation.eulerAngles.z;

@@ -56,20 +56,47 @@ public class InterceptorScanner : MonoBehaviour
                 enemies = Physics2D.OverlapCircleAll(
                     transform.position, scanRange, LayerMask.GetMask(scanLayer));
                 List<int> validIndexes = FilterEnemies(enemies);
+                List<int> indexesInArc = new List<int>();
                 if (validIndexes.Count > 0)
                 {
-                    foreach(int vidx in validIndexes)
+                    int closestShipIdx = -1;
+                    float closestShipDistance = float.MaxValue;
+                    int closestShipInArcIdx = -1;
+                    float closestShipInArcDistance = float.MaxValue;
+
+                    foreach (int vidx in validIndexes)
                     {
-                        // pick first on in firing arc
+                        float targetDistance = Vector3.Distance(transform.position, enemies[vidx].gameObject.transform.position);
+                        if (targetDistance < closestShipDistance)
+                        {
+                            closestShipDistance = targetDistance;
+                            closestShipIdx = vidx;
+                        }
                         float targetBearing = Vector3.Angle(transform.up, enemies[vidx].gameObject.transform.position - transform.position);
                         if (targetBearing < GetComponent<InterceptorWeapon>().firingArc)
                         {
-                            return enemies[vidx].gameObject;
+                            if (targetDistance < closestShipInArcDistance)
+                            {
+                                closestShipInArcDistance = targetDistance;
+                                closestShipInArcIdx = vidx;
+                            }
+                            indexesInArc.Add(vidx);
                         }
                     }
-                    // Randomly select amongst the available targets, to prevent
-                    // ships from all ganging up on one.
-                    int selectedEnemy = validIndexes[Random.Range(0, validIndexes.Count - 1)];
+                    int selectedEnemy;
+                    if (indexesInArc.Count > 0)
+                    {
+                        // randomly select amongst units in firing arc
+                        // selectedEnemy = validIndexes[Random.Range(0, validIndexes.Count - 1)];
+                        selectedEnemy = closestShipInArcIdx;
+                    }
+                    else
+                    {
+                        // Randomly select amongst the available targets, to prevent
+                        // ships from all ganging up on one.
+                        //selectedEnemy = validIndexes[Random.Range(0, validIndexes.Count - 1)];
+                        selectedEnemy = closestShipIdx;
+                    }
                     return enemies[selectedEnemy].gameObject;
                 }
             }

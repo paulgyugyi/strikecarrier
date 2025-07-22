@@ -250,8 +250,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reloadTime: 1
   firingArc: 30
-  minDamage: 20
-  maxDamage: 40
+  minDamage: 35
+  maxDamage: 35
   weaponRange: 5
   LaserbeamPrefab: {fileID: 7535571077546377202, guid: a589491ba8c554231b12bb2d3f56e3c5, type: 3}
   audioSource: {fileID: 4341073866030462138}

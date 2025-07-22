@@ -32,12 +32,13 @@ public class Interceptor : MonoBehaviour
 
     public Squadron squadron = null;
     public int squadronPosition = 0;
+    private GameObject squadronLeader = null;
+    private GameObject weaponTarget = null;
 
     public int shipSTR = 0;
     public int shipINT = 0;
     public int shipDEX = 0;
 
-    private bool wingman = false;
 
     public string shipName = "";
 
@@ -76,19 +77,7 @@ public class Interceptor : MonoBehaviour
             Vector3 desiredAngles = desiredRotation.eulerAngles;
             propulsion.heading = desiredAngles.z;
 
-            if (squadron != null && squadron.Formation() > 0)
-            {
-                shipName = squadron.squadronName + "_" + squadronPosition;
-                if (squadron.Leader() == gameObject)
-                {
-                    Debug.Log(shipName + " leader checking in");
-                }
-                else
-                {
-                    Debug.Log(shipName + " checking in");
-                    wingman = true;
-                }
-            }
+            SetShipName();
         }
     }
 
@@ -96,6 +85,7 @@ public class Interceptor : MonoBehaviour
     {
         if (trackingState == TrackingState.Resting)
         {
+            weaponTarget = null;
             propulsion.state = InterceptorPropulsion.PropulsionState.Eco;
             propulsion.StopMoving();
             // Go to sleep
@@ -106,6 +96,7 @@ public class Interceptor : MonoBehaviour
 
         if (trackingState == TrackingState.Returning)
         {
+            weaponTarget = null;
             if (propulsion.AtWaypoint)
             {
                 //Debug.Log("Ship returned.");
@@ -117,34 +108,20 @@ public class Interceptor : MonoBehaviour
 
         if (trackingState == TrackingState.Launching)
         {
+            weaponTarget = null;
             //Debug.Log("Ship pos: " + transform.position + " Target: " + patrolLocation.transform.position);
             //Debug.Log("Distance: " + Vector3.Magnitude(transform.position - patrolLocation.transform.position));
             //Debug.Log("DistanceToTarget: " + propulsion.DistanceToTarget);
             if (propulsion.AtWaypoint)
             {
-                Debug.Log(shipName + ": Reached launch waypoint, patrolling...");
-                if (wingman)
+                Debug.Log(shipName + ": Reached launch waypoint");
+                if (squadron != null && squadron.Formation() > 0 && squadron.Leader() != null && squadron.Leader() != gameObject)
                 {
-                    // Follow formation leader
-                    Transform waypoint = squadron.Leader().transform;
-                    // Line formation
-                    float distance = 0.5f * (squadronPosition + 1) / 2;
-                    float direction = (squadronPosition % 2) * 2 - 1;
-                    Vector3 offset = new Vector3(direction * distance, -1 * distance, 0);
-                    Debug.Log(shipName + " offset " + offset);
-                    propulsion.TrackTarget(waypoint, offset);
-                    propulsion.state = InterceptorPropulsion.PropulsionState.Follow;
-
-                    trackingState = TrackingState.Supporting;
+                    FollowNewLeader(squadron.Leader());
                 }
                 else
                 {
-                    trackingState = TrackingState.Patrolling;
-                    if (shouldOrbit)
-                    {
-                        propulsion.state = InterceptorPropulsion.PropulsionState.Eco;
-                        propulsion.OrbitTarget(Carrier.transform, patrolLocation.transform.position);
-                    }
+                    FlyIndependent();
                 }
             }
             else
@@ -155,14 +132,18 @@ public class Interceptor : MonoBehaviour
 
         if (trackingState == TrackingState.Patrolling)
         {
+            weaponTarget = null;
             if (true || propulsion.NearWaypoint)
             {
                 GameObject newTarget = scanner.FindTarget(scanLayers);
+                weaponTarget = newTarget;
                 if (newTarget == null)
                 {
+                    Debug.Log(shipName + " no target");
                     propulsion.state = InterceptorPropulsion.PropulsionState.Eco;
                     if (Carrier == null)
                     {
+                        Debug.LogWarning(shipName + " resting");
                         trackingState = TrackingState.Resting;
                         propulsion.StopMoving();
                         // TBD: This causes enemy interceptors to stop in mid-space. Looks weird.
@@ -196,6 +177,7 @@ public class Interceptor : MonoBehaviour
                 {
                     if (weapon.FireWeapon(target))
                     {
+                        weaponTarget = target;
                         string targetName = target.name;
 
                         if (targetName.StartsWith("Cluster") ||
@@ -215,6 +197,7 @@ public class Interceptor : MonoBehaviour
             if (target == null)
             {
                 target = scanner.FindTarget(scanLayers);
+                weaponTarget = target;
                 if (target == null)
                 {
                     trackingState = TrackingState.Patrolling;
@@ -247,38 +230,78 @@ public class Interceptor : MonoBehaviour
 
         if (trackingState == TrackingState.Supporting)
         {
-            if (squadron.Leader() == null || squadron.Leader() == gameObject)
+            if (squadronLeader != squadron.Leader())
             {
-                Debug.Log("Oh no, the leader is gone");
-                wingman = false;
-                trackingState = TrackingState.Patrolling;
+                if (squadron != null && squadron.Formation() > 0 && squadron.Leader() != null && squadron.Leader() != gameObject)
+                {
+                    FollowNewLeader(squadron.Leader());
+                }
+                else
+                {
+                    Debug.LogWarning(shipName + " Oh no, the leader is gone.");
+                    FlyIndependent();
+                }
             }
             else
             {
-                //propulsion.state = squadron.Leader().GetComponent<Interceptor>().propulsion.state;
-
-                if (squadron.Leader().GetComponent<Interceptor>().trackingState == TrackingState.Hunting)
+                if (squadronLeader.GetComponent<Interceptor>().trackingState == TrackingState.Hunting)
                 {
-                    target = squadron.Leader().GetComponent<Interceptor>().target;
+                    bool fired = false;
+                    target = squadronLeader.GetComponent<Interceptor>().target;
                     if (target != null)
                     {
+                        weaponTarget = target;
                         if (Vector3.Magnitude(target.transform.position - transform.position) < weapon.weaponRange)
                         {
-                            if (weapon != null && weapon.FireWeapon(target))
+                            if (weapon != null)
                             {
-                                string targetName = target.name;
-
-                                if (targetName.StartsWith("Cluster") ||
-                                    targetName.StartsWith("City") ||
-                                    targetName.StartsWith("Colony"))
+                                fired = weapon.FireWeapon(target);
+                                if (fired)
                                 {
-                                    Debug.Log(name + " captured " + targetName);
-                                    Carrier.GetComponent<ResourceTracker>().AddEnergy(1f);
-                                    Carrier.GetComponent<ResourceTracker>().AddResources(5000f);
-                                }
+                                    string targetName = target.name;
 
-                                // defeated target
-                                target = null; // TBD needed?
+                                    // Move this to FireWeapon or health tracker.
+                                    if (targetName.StartsWith("Cluster") ||
+                                        targetName.StartsWith("City") ||
+                                        targetName.StartsWith("Colony"))
+                                    {
+                                        Debug.Log(name + " captured " + targetName);
+                                        Carrier.GetComponent<ResourceTracker>().AddEnergy(1f);
+                                        Carrier.GetComponent<ResourceTracker>().AddResources(5000f);
+                                    }
+
+                                    // defeated target
+                                    target = null; // TBD needed?
+                                }
+                            }
+                        }
+                    }
+                    if (false && !fired)
+                    {
+                        GameObject altTarget = scanner.FindTarget(scanLayers);
+                        if (altTarget != null)
+                        {
+                            weaponTarget = altTarget;
+                            if (Vector3.Magnitude(altTarget.transform.position - transform.position) < weapon.weaponRange)
+                            {
+                                if (weapon != null)
+                                {
+                                    fired = weapon.FireWeapon(altTarget);
+                                    if (fired)
+                                    {
+                                        string altTargetName = altTarget.name;
+
+                                        // Move this to FireWeapon or health tracker.
+                                        if (altTargetName.StartsWith("Cluster") ||
+                                            altTargetName.StartsWith("City") ||
+                                            altTargetName.StartsWith("Colony"))
+                                        {
+                                            Debug.Log(name + " captured " + altTargetName);
+                                            Carrier.GetComponent<ResourceTracker>().AddEnergy(1f);
+                                            Carrier.GetComponent<ResourceTracker>().AddResources(5000f);
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -287,6 +310,55 @@ public class Interceptor : MonoBehaviour
             }
         }
 
+    }
+
+    private void SetShipName()
+    {
+        if (squadron != null)
+        {
+            shipName = squadron.squadronName + "_" + squadronPosition;
+        }
+        else
+        {
+            shipName = gameObject.name;
+        }
+    }
+
+    private void FollowNewLeader(GameObject newLeader)
+    {
+        if (squadronLeader != newLeader)
+        {
+            squadronLeader = newLeader;
+            Debug.Log(shipName + " now following " + squadronLeader.GetComponent<Interceptor>().shipName);
+            Vector3 offset = Vector3.zero;
+            if (squadron.Formation() == 1)
+            {
+                // Line formation
+                float distance = 0.5f * (squadronPosition + 1) / 2;
+                float direction = squadronPosition % 2 * 2 - 1;
+                offset = new Vector3(direction * distance, -1 * distance, 0);
+                Debug.Log(shipName + " offset " + offset);
+            }
+            propulsion.TrackTarget(squadronLeader.transform, offset);
+            propulsion.state = InterceptorPropulsion.PropulsionState.Follow;
+            trackingState = TrackingState.Supporting;
+        }
+    }
+
+    private void FlyIndependent()
+    {
+        Debug.Log(shipName + ": patrolling...");
+        squadronLeader = null;
+        if (shouldOrbit)
+        {
+            propulsion.state = InterceptorPropulsion.PropulsionState.Eco;
+            propulsion.OrbitTarget(Carrier.transform, patrolLocation.transform.position);
+        }
+        else
+        {
+            // ??
+        }
+        trackingState = TrackingState.Patrolling;
     }
 
     private void InterceptTarget(GameObject target)
@@ -359,4 +431,20 @@ public class Interceptor : MonoBehaviour
         }
         Destroy(gameObject);
     }
+
+    private void OnDrawGizmos()
+    {
+        //Gizmos.color = Color.red;
+        if (Carrier.GetComponent<CarrierLaunch>().carrierName.Contains("Green"))
+        {
+            Gizmos.color = Color.green;
+
+            if (weaponTarget != null)
+            {
+                Gizmos.DrawLine(transform.position, weaponTarget.transform.position);
+                Gizmos.DrawWireSphere(weaponTarget.transform.position, 0.5f);
+            }
+        }
+    }
+
 }

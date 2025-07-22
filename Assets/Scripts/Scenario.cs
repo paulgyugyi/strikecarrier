@@ -43,6 +43,7 @@ public class Scenario : MonoBehaviour
                 carrier2Launch.LaunchShip(carrier2Launch.fighterPrefab);
                 yield return new WaitForSeconds(0.5f);
             }
+            yield return new WaitForSeconds(Random.Range(0, 6));
             carrier1Move.inputThrust = true;
             carrier2Move.inputThrust = true;
             yield return new WaitForSeconds(2f);

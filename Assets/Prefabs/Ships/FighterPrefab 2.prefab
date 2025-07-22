@@ -250,8 +250,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   reloadTime: 1
   firingArc: 30
-  minDamage: 20
-  maxDamage: 40
+  minDamage: 35
+  maxDamage: 35
   weaponRange: 5
   LaserbeamPrefab: {fileID: 7535571077546377202, guid: 48bb012068a68d64884686bf18c3d42d, type: 3}
   audioSource: {fileID: 4341073866030462138}
@@ -310,7 +310,7 @@ MonoBehaviour:
   state: 0
   regionLockCenter: {fileID: 0}
   regionLockRadius: 0
-  level: 5
+  level: 2
   heading: 0
 --- !u!1 &7690437258439900663
 GameObject:
